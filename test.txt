@@ -1,2 +1,2 @@
 # test.txt in dockerazure
-#testing the push go github
+#testing the push go github now via VSC
