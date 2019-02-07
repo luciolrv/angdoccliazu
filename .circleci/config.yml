@@ -9,6 +9,13 @@ jobs:
       # specify the version you desire here
       - image: circleci/node:8-browsers
       
+      # setup the remote docker in CircleCI
+      - setup_remote_docker
+
+      #download and cache dependencies
+      - restore_cache
+      
+      
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
       # documented at https://circleci.com/docs/2.0/circleci-images/
@@ -17,8 +24,9 @@ jobs:
     working_directory: ~/repo
 
     steps:
+      #checkout is done automatically since we have a webhook in CircleCI to GitHub 
       - checkout
-      #- setup_remote_docker
+      - setup_remote_docker
 
       # Download and cache dependencies
       - restore_cache:
@@ -36,14 +44,15 @@ jobs:
         
       # run tests!
       - run: yarn ng build --prod
+      #Observe watch=false is newer than single-run
       - run: yarn ng test --watch=false
 
-      #- run:
-       #   command: |
-        #    docker build -t sicotin.azurecr.io/hello:1.0 .
-      #- run:
-       #   command: |
-        #    docker login --username $DOCKER_USER --password $DOCKER_PASS sicotin.azurecr.io
-      #- run:
-       #   command: |
-       #     docker push sicotin.azurecr.io/hello:1.0
+      - run:
+          command: |
+            docker build -t editora.azurecr.io/hello:1.0 .
+      - run:
+          command: |
+            docker login --username $DOCKER_USER --password $DOCKER_PASS editora.azurecr.io
+      - run:
+          command: |
+            docker push editora.azurecr.io/hello:1.0
